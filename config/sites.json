@@ -1,0 +1,131 @@
+{
+  "_comment": "8 家厂商开发者门户 What's New / Release Notes 站点配置。NVIDIA 配置 5 个子站重点追踪。crawl=true 时从种子页提取链接爬取子页面（scope=host 同主域 / scope=domain 同一级域名），maxPages 限制子页面数量。",
+  "sites": [
+    {
+      "company": "nvidia",
+      "name": "developer",
+      "url": "https://developer.nvidia.com/",
+      "_note": "首页 Latest Releases + News 区块",
+      "crawl": true,
+      "maxPages": 8
+    },
+    {
+      "company": "nvidia",
+      "name": "cudnn",
+      "url": "https://developer.nvidia.com/cudnn",
+      "_note": "NVIDIA cuDNN product page (避开 docs 站 308/连接关闭)",
+      "crawl": true,
+      "maxPages": 4
+    },
+    {
+      "company": "nvidia",
+      "name": "cuda",
+      "url": "https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html",
+      "_note": "CUDA Toolkit Release Notes",
+      "crawl": true,
+      "maxPages": 6
+    },
+    {
+      "company": "nvidia",
+      "name": "nim",
+      "url": "https://docs.nvidia.com/nim/",
+      "_note": "NIM 推理微服务文档站",
+      "crawl": true,
+      "maxPages": 5
+    },
+    {
+      "company": "nvidia",
+      "name": "llms-txt",
+      "url": "https://docs.nvidia.com/llms.txt",
+      "_note": "NVIDIA 全产品文档 MCP 总索引，新增产品可在此早发现（纯文本页无子链接可爬）"
+    },
+    {
+      "company": "amd",
+      "name": "rocm-hub",
+      "url": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+      "_note": "ROCm Developer Hub What's New 区块",
+      "crawl": true,
+      "maxPages": 6
+    },
+    {
+      "company": "amd",
+      "name": "rocm-release-notes",
+      "url": "https://rocm.docs.amd.com/en/latest/about/release-notes.html",
+      "_note": "ROCm Core SDK Release Notes",
+      "crawl": true,
+      "maxPages": 5
+    },
+    {
+      "company": "qualcomm",
+      "name": "ai-hub",
+      "url": "https://aihub.qualcomm.com/",
+      "_note": "Qualcomm AI Hub 首页公告",
+      "crawl": true,
+      "maxPages": 6
+    },
+    {
+      "company": "intel",
+      "name": "oneapi-toolkit-rn",
+      "url": "https://www.intel.cn/content/www/cn/zh/developer/tools/oneapi/overview.html",
+      "_note": "Intel 中国 oneAPI 总览页（绕开 .com 站点对中国 IP 的 403）",
+      "crawl": true,
+      "maxPages": 5
+    },
+    {
+      "company": "intel",
+      "name": "oneapi-toolkits",
+      "url": "https://www.intel.cn/content/www/cn/zh/developer/tools/oneapi/toolkits.html",
+      "_note": "Intel 中国 oneAPI 工具包版本列表页（onemkl docs 路径 403，此页可访问且版本更新可见）",
+      "crawl": true,
+      "maxPages": 4
+    },
+    {
+      "company": "apple",
+      "name": "developer",
+      "url": "https://developer.apple.com/",
+      "_note": "Apple Developer 首页",
+      "crawl": true,
+      "maxPages": 8
+    },
+    {
+      "company": "apple",
+      "name": "newsroom-developer",
+      "url": "https://www.apple.com/newsroom/",
+      "_note": "Apple Newsroom（Press Release）",
+      "crawl": true,
+      "maxPages": 6
+    },
+    {
+      "company": "ascend",
+      "name": "developer-home",
+      "url": "https://www.hiascend.com/developer",
+      "_note": "昇腾社区开发者主页版本发布 + 技术热点",
+      "crawl": true,
+      "maxPages": 5
+    },
+    {
+      "company": "ascend",
+      "name": "cann-document",
+      "url": "https://www.hiascend.com/cann/document",
+      "_note": "CANN 文档关键特性",
+      "crawl": true,
+      "maxPages": 4
+    },
+    {
+      "company": "kunpeng",
+      "name": "devkit-release-notes",
+      "url": "https://www.hikunpeng.com/document/detail/zh/kunpengdevps/releasenotes/KunpengDevKitRelease_0079.html",
+      "_note": "鲲鹏 DevKit 更新说明",
+      "crawl": true,
+      "maxPages": 4
+    },
+    {
+      "company": "google",
+      "name": "gemini-api-changelog",
+      "url": "https://ai.google.dev/gemini-api/docs/changelog",
+      "_note": "Gemini API 官方 Changelog 页（原 generative-ai-python 仓库已废弃 404）",
+      "crawl": true,
+      "maxPages": 4
+    }
+  ]
+}
