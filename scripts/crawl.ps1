@@ -559,4 +559,14 @@ if ($companies.Count -eq 0) {
 [System.IO.File]::WriteAllText($summaryFile, ($summaryLines -join [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
 $summaryLogMsg = 'Summary -> ' + $summaryFile
 Write-Log $summaryLogMsg
+
+# ========== Rebuild the HTML dashboard from all data ==========
+try {
+    $dashboardScript = Join-Path $PSScriptRoot 'build-dashboard.ps1'
+    & $dashboardScript -OutputRoot $OutputRoot
+    Write-Log "Dashboard -> $(Join-Path $OutputRoot 'index.html')"
+}
+catch {
+    Write-Log "WARN: dashboard rebuild failed: $($_.Exception.Message)"
+}
 Write-Log ''

@@ -20,13 +20,16 @@ description: "每日定时爬取 8 家厂商开发者门户的 What's New / Rele
 .trae/skills/dev-site-crawler/
 ├── SKILL.md                          # 本文件
 ├── config/
-│   └── sites.json                    # 站点配置（公司、URL、提取规则）
+│   ├── sites.json                    # 站点配置（公司、URL、提取规则）
+│   └── dashboard-strings.json        # 看板中文文案（外置避免 PS5 编码问题）
 └── scripts/
     ├── crawl.ps1                     # 主爬取脚本（PowerShell 5 兼容）
+    ├── build-dashboard.ps1           # 爬取结束后自动重建 HTML 看板
     ├── install-task.ps1              # 注册 Windows 任务计划
     └── uninstall-task.ps1            # 卸载 Windows 任务计划
 
 dev-site-crawls/                       # 数据输出根目录（运行时自动创建）
+├── index.html                         # 可视化看板（每次爬取后自动重建）
 ├── crawl-YYYY-MM-DD.log               # 每日运行日志
 ├── summary/YYYY-MM-DD.md              # 每日更新汇总（bullet point，方便人看）
 ├── nvidia/
@@ -214,6 +217,26 @@ schtasks /query /tn "DevSiteCrawler-Daily" /v /fo list
 - 首次抓取的站点会标注 `__First-time capture, baseline only, no diff info__`
 - 完全无变化的站点不出现在汇总里
 - 全英文输出，避免 PowerShell 5 在中文环境下编码问题
+
+### 可视化看板 `index.html`
+
+每次爬取结束后（summary 生成之后）自动由 `build-dashboard.ps1` 重建，纯静态无 JS 依赖，浏览器直接打开即可：
+
+- **按日期倒序**：最新日期置顶，当日有真实更新的页面排在前面（按新增行数降序），噪音类条目排最后
+- **每日折叠分组**：最新一天默认展开，其余日期默认收起；每组 summary 行显示"N 个页面有更新 / N 无变化 / N 失败"
+- **变更摘要**：从 diff 的 Added lines 自动蒸馏出最多 5 条有意义的标题级条目（过滤日期行、超短/超长噪音行）；首次抓取的子页显示基线提示
+- **分类标签**（规则式，基于路径/URL/新增行关键词自动匹配）：
+  - `最新博客`：路径含 blog
+  - `产品发版`：新增行含 release/hotfix/released
+  - `新产品发布`：新增行含 launch/announce/introducing/now available
+  - `文档改版`：docs 域名或新增行 ≥40
+  - `AI 功能新增`：新增行含 AI/LLM/NIM/Megatron/Copilot 等
+  - `活动资讯` / `站点资讯` / `噪音`（纯模板/cookie 类变更）
+  - 子页面额外带灰色 `子页` 标识，首次收录带 `首次收录` 标识
+- **Diff 直达链接**：每条变更可跳转对应的 changes/*.md
+- **无变化/失败分组**：每日底部折叠展示，默认收起不占篇幅
+- 所有中文文案外置于 `config/dashboard-strings.json`（脚本本体保持 ASCII，规避 PS5 中文编码问题）
+- 手动重建：`powershell -ExecutionPolicy Bypass -File .trae\skills\dev-site-crawler\scripts\build-dashboard.ps1`
 
 ## 注意事项
 
