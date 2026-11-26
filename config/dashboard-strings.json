@@ -1,6 +1,6 @@
 {
   "title": "厂商开发者站点更新看板",
-  "subtitle": "每日 02:00 自动爬取 8 家厂商开发者门户 · 快照 + Diff + 子页面爬取 + 变更截图",
+  "subtitle": "每日 02:00 自动爬取 10 家厂商开发者门户 · 快照 + Diff + 子页面爬取 + 变更截图",
   "generatedAt": "生成时间",
   "totalDays": "天记录",
   "totalChanges": "条变更",
@@ -21,7 +21,9 @@
     "release": "产品发版",
     "newproduct": "新产品发布",
     "docs": "文档改版",
-    "ai": "AI 功能新增",
+    "model": "模型更新",
+    "aicommunity": "社区 AI 相关",
+    "aiproduct": "AI 产品",
     "event": "活动资讯",
     "news": "站点资讯",
     "noise": "噪音"

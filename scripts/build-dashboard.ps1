@@ -39,6 +39,14 @@ function Escape-Html {
     return $s
 }
 
+# External-link icon (SVG) that opens the changed page itself in a new tab
+function Get-PageLinkHtml {
+    param([string]$Url)
+    if (-not $Url) { return '' }
+    $icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+    return ('<a class="urllink" href="' + (Escape-Html $Url) + '" target="_blank" rel="noopener" title="' + (Escape-Html $Url) + '">' + $icon + '</a>')
+}
+
 # ---- Rule-based tagging: returns tag keys; display names come from $S.tags ----
 function Get-TagKeys {
     param([string]$Display, [string]$Url, [string]$AddedText, [int]$AddedCount, [bool]$IsInitial)
@@ -58,7 +66,17 @@ function Get-TagKeys {
     # Docs-site hosts or bulk index changes count as documentation churn
     if ($Url -match '(?i)://docs?\.|/document|/docs/|/overview' -or $AddedCount -ge 40) { $t.Add('docs') }
 
-    if ($AddedText -match '(?i)\b(AI|LLM|NIM|GPT|inference|multimodal|Riva|NeMo|TAO|Megatron|Cosmos|TensorRT|transformer|fine-tun\w*|embedd\w*)\b') { $t.Add('ai') }
+    # Model updates: named model releases/deprecations & model catalog changes
+    if ($AddedText -match '(?i)\b(Llama|Gemini|DeepSeek|Qwen|Mistral|Mixtral|Kimi|Grok)[ -]?\d' -or
+        $AddedText -match '(?i)\bClaude\s+(\w+\s+)?\d|\b(chat)?gpt\b|\bo[134]\b' -or
+        $AddedText -match '(?i)\b(LLM|checkpoint|model weights)s?\s+(releas\w+|updat\w+|available|version)' -or
+        $AddedText -match '(?i)\b(new|added|latest|updated?|available|released?|launch\w*|deprecat\w*|retir\w*|sunset|introduc\w*|announc\w*)\s+(a\s+|an\s+|the\s+)?(new\s+|foundation\s+|language\s+|vision\s+|multimodal\s+|embedding\s+|text-to-image\s+|video\s+)?(AI\s+)?models?\b' -or
+        $AddedText -match '(?i)(deprecat\w+|retir\w+|sunset).{0,40}\bmodels?\b' -or
+        $AddedText -match '(?i)\bmodels?\s+(list|catalog|names?|pricing)\b') { $t.Add('model') }
+    # Community AI capabilities developers can use: MCP, agents, retrieval/RAG, tool calling
+    elseif ($AddedText -match '(?i)\bMCP\b|model context protocol|\bagents?\b|agentic|tool\s?(use|calling)|function calling|\bRAG\b|retrieval|vector (search|database)|knowledge base|plugins?\b') { $t.Add('aicommunity') }
+    # AI products: AI platform/infra stack & GPU AI features (NIM, TensorRT, Megatron, DLSS ...)
+    elseif ($AddedText -match '(?i)\b(AI|LLM|NIM|inference|multimodal|Riva|NeMo|TAO|Megatron|Cosmos|TensorRT|transformer|fine-tun\w*|embedd\w*|machine learning|Copilot|DLSS|G-Assist)\b') { $t.Add('aiproduct') }
 
     if ($AddedText -match '(?i)\b(webinar|summit|conference|workshop|hackathon|GTC|CES)\b') { $t.Add('event') }
 
@@ -185,8 +203,9 @@ foreach ($e in $entries) {
 
 $tagColor = @{
     blog = 'tag-blog'; release = 'tag-release'; newproduct = 'tag-newproduct'
-    docs = 'tag-docs'; ai = 'tag-ai'; event = 'tag-event'
-    news = 'tag-news'; initial = 'tag-initial'; noise = 'tag-noise'
+    docs = 'tag-docs'; model = 'tag-model'; aicommunity = 'tag-aicommunity'
+    aiproduct = 'tag-aiproduct'; event = 'tag-event'; news = 'tag-news'
+    initial = 'tag-initial'; noise = 'tag-noise'
 }
 
 $sb = New-Object System.Text.StringBuilder
@@ -225,14 +244,19 @@ header p{margin:0;opacity:.75;font-size:13px}
 .tag-release{background:#ffe9d6;color:#b35900}
 .tag-newproduct{background:#f3e8ff;color:#7c3aed}
 .tag-docs{background:#d9f2ee;color:#0d7a68}
-.tag-ai{background:#e4f8d8;color:#2e7d32}
+.tag-aicommunity{background:#e4f8d8;color:#2e7d32}
+.tag-aiproduct{background:#cffafe;color:#0e7490}
+.tag-model{background:#fde2ec;color:#be1867}
 .tag-event{background:#fff3c4;color:#8a6d00}
 .tag-news{background:#ede7f6;color:#5e35b1}
 .tag-initial{background:#e8e8e8;color:#555}
 .tag-noise{background:#f0f0f0;color:#9ca3af}
 .tag-sub{background:#f0f4ff;color:#64748b;border:1px solid #e2e8f0}
-a.difflink{font-size:12px;color:#0a5bb5;text-decoration:none;margin-left:auto;white-space:nowrap}
+a.difflink{font-size:12px;color:#0a5bb5;text-decoration:none;margin-left:8px;white-space:nowrap}
 a.difflink:hover{text-decoration:underline}
+a.urllink{display:inline-flex;align-items:center;margin-left:auto;color:#8a94a3;text-decoration:none;line-height:1}
+a.urllink:hover{color:#0a5bb5}
+a.urllink svg{width:14px;height:14px;display:block}
 .brief{margin:8px 0 0 0;padding-left:22px;color:#374151;font-size:13.5px}
 .brief li{margin:4px 0;line-height:1.45}
 .brief.none{list-style:none;padding-left:0;color:#9ca3af;font-style:italic}
@@ -305,6 +329,7 @@ foreach ($date in $sortedDates) {
         else {
             [void]$sb.AppendLine(('<span class="site-count">+' + $e.Added + ' / -' + $e.Removed + '</span>'))
         }
+        [void]$sb.AppendLine((Get-PageLinkHtml $e.Url))
         [void]$sb.AppendLine(('<a class="difflink" href="' + (Escape-Html $e.DiffRel) + '">' + (Escape-Html $S.viewDiff) + ' &rarr;</a>'))
         [void]$sb.AppendLine('</div>')
         if ($e.Brief.Count -gt 0) {
@@ -321,6 +346,7 @@ foreach ($date in $sortedDates) {
         if ($e.IsSub) { [void]$sb.AppendLine(('<span class="tag tag-sub">' + (Escape-Html $S.subpageMark) + '</span>')) }
         [void]$sb.AppendLine(('<span class="tag tag-noise">' + (Escape-Html $S.tags.noise) + '</span>'))
         [void]$sb.AppendLine(('<span class="site-count">+' + $e.Added + ' / -' + $e.Removed + '</span>'))
+        [void]$sb.AppendLine((Get-PageLinkHtml $e.Url))
         [void]$sb.AppendLine(('<a class="difflink" href="' + (Escape-Html $e.DiffRel) + '">' + (Escape-Html $S.viewDiff) + ' &rarr;</a>'))
         [void]$sb.AppendLine('</div></div>')
     }

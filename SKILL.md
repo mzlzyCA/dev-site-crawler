@@ -1,11 +1,11 @@
 ---
 name: "dev-site-crawler"
-description: "每日定时爬取 8 家厂商开发者门户的 What's New / Release Notes 内容（NVIDIA 重点）。Invoke when 用户要求定时抓取厂商开发者站点更新、查看爬取日志、或维护站点配置。"
+description: "每日定时爬取 10 家厂商开发者门户的 What's New / Release Notes 内容（NVIDIA 重点，含 Anthropic/OpenAI）。Invoke when 用户要求定时抓取厂商开发者站点更新、查看爬取日志、或维护站点配置。"
 ---
 
 # Dev Site Crawler
 
-每日定时爬取 NVIDIA / AMD / Qualcomm / Intel / Apple / 昇腾 / 鲲鹏 / Google 8 家厂商开发者门户的 What's New 与 Release Notes 页面，做整页快照 + diff 比对 + 变更页面截图，把"有变化"的内容按日期归档。支持从种子页自动发现并爬取同域子页面。
+每日定时爬取 NVIDIA / AMD / Qualcomm / Intel / Apple / 昇腾 / 鲲鹏 / Google / Anthropic / OpenAI 10 家厂商开发者门户的 What's New 与 Release Notes 页面，做整页快照 + diff 比对 + 变更页面截图，把"有变化"的内容按日期归档。支持从种子页自动发现并爬取同域子页面。
 
 ## When to Use
 
@@ -50,7 +50,9 @@ dev-site-crawls/                       # 数据输出根目录（运行时自动
 ├── apple/
 ├── ascend/
 ├── kunpeng/
-└── google/
+├── google/
+├── anthropic/
+└── openai/
 ```
 
 ## 默认执行时间
@@ -230,9 +232,12 @@ schtasks /query /tn "DevSiteCrawler-Daily" /v /fo list
   - `产品发版`：新增行含 release/hotfix/released
   - `新产品发布`：新增行含 launch/announce/introducing/now available
   - `文档改版`：docs 域名或新增行 ≥40
-  - `AI 功能新增`：新增行含 AI/LLM/NIM/Megatron/Copilot 等
+  - `模型更新`：Claude/GPT/Gemini/Llama 等模型发布、弃用、模型清单/定价变更
+  - `社区 AI 相关`：MCP、Agent、RAG/检索、工具调用、插件等开发者可用的 AI 能力
+  - `AI 产品`：NIM/TensorRT/Megatron/Cosmos 等 AI 平台产品栈、显卡 AI 特性（DLSS 等）
   - `活动资讯` / `站点资讯` / `噪音`（纯模板/cookie 类变更）
   - 子页面额外带灰色 `子页` 标识，首次收录带 `首次收录` 标识
+- **页面直达图标**：每条变更右侧外部链接图标（↗），点击新标签页打开原始页面；旁边 "Diff →" 链接查看本地差异文件
 - **Diff 直达链接**：每条变更可跳转对应的 changes/*.md
 - **无变化/失败分组**：每日底部折叠展示，默认收起不占篇幅
 - 所有中文文案外置于 `config/dashboard-strings.json`（脚本本体保持 ASCII，规避 PS5 中文编码问题）

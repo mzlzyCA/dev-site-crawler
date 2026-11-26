@@ -1,5 +1,5 @@
 {
-  "_comment": "8 家厂商开发者门户 What's New / Release Notes 站点配置。NVIDIA 配置 5 个子站重点追踪。crawl=true 时从种子页提取链接爬取子页面（scope=host 同主域 / scope=domain 同一级域名），maxPages 限制子页面数量。",
+  "_comment": "10 家厂商开发者门户 What's New / Release Notes 站点配置。NVIDIA 配置 5 个子站重点追踪。crawl=true 时从种子页提取链接爬取子页面（scope=host 同主域 / scope=domain 同一级域名），maxPages 限制子页面数量。",
   "sites": [
     {
       "company": "nvidia",
@@ -126,6 +126,38 @@
       "_note": "Gemini API 官方 Changelog 页（原 generative-ai-python 仓库已废弃 404）",
       "crawl": true,
       "maxPages": 4
+    },
+    {
+      "company": "anthropic",
+      "name": "claude-release-notes",
+      "url": "https://docs.anthropic.com/en/release-notes/overview",
+      "_note": "Claude Platform 官方 Release Notes（docs.claude.com 在本网络不可达，docs.anthropic.com 同内容可访问）",
+      "crawl": true,
+      "maxPages": 4
+    },
+    {
+      "company": "anthropic",
+      "name": "news",
+      "url": "https://www.anthropic.com/news",
+      "_note": "Anthropic Newsroom（Claude 新模型发布公告）",
+      "crawl": true,
+      "maxPages": 5
+    },
+    {
+      "company": "openai",
+      "name": "api-changelog",
+      "url": "https://platform.openai.com/docs/changelog",
+      "_note": "OpenAI 平台官方 Changelog（模型/API 更新）",
+      "crawl": true,
+      "maxPages": 4
+    },
+    {
+      "company": "openai",
+      "name": "news",
+      "url": "https://openai.com/news/",
+      "_note": "OpenAI News（新模型与研究发布公告）",
+      "crawl": true,
+      "maxPages": 5
     }
   ]
 }
